@@ -92,6 +92,7 @@ le `.venv` partagé.
 | ------------------------------------------------- | ------------------------------- | ---------- |
 | [01-regression-lineaire](01-regression-lineaire/) | Régression linéaire (1 neurone) | `tp1`      |
 | [02-spam-ou-pas-spam](02-spam-ou-pas-spam/)       | Spam ou pas spam (classification) | `tp2`    |
+| [03-xor-couche-cachee](03-xor-couche-cachee/)     | XOR et couche cachée (MLP)      | `tp3`      |
 
 ## Ajouter une dépendance
 

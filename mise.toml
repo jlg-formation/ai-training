@@ -18,3 +18,8 @@ run = "uv run main.py"
 description = "TP 2 - Spam ou pas spam (classification, 1 neurone)"
 dir = "02-spam-ou-pas-spam"
 run = "uv run main.py"
+
+[tasks.tp3]
+description = "TP 3 - XOR et couche cachée (pourquoi plusieurs neurones)"
+dir = "03-xor-couche-cachee"
+run = "uv run main.py"
