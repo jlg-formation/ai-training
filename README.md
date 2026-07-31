@@ -94,6 +94,7 @@ le `.venv` partagé.
 | [02-spam-ou-pas-spam](02-spam-ou-pas-spam/)       | Spam ou pas spam (classification) | `tp2`    |
 | [03-xor-couche-cachee](03-xor-couche-cachee/)     | XOR et couche cachée (MLP)      | `tp3`      |
 | [04-mnist-pytorch](04-mnist-pytorch/)             | Chiffres MNIST (première fois en PyTorch) | `tp4` |
+| [05-my-own-dataset](05-my-own-dataset/)           | Ton propre dataset (pommes vs poires, transfer learning) | `tp5` |
 
 ## Conventions mathématiques
 

@@ -28,3 +28,18 @@ run = "uv run main.py"
 description = "TP 4 - Reconnaissance de chiffres MNIST (PyTorch)"
 dir = "04-mnist-pytorch"
 run = "uv run main.py"
+
+[tasks.tp5-data]
+description = "TP 5 - Construire le dataset pommes/poires (Bing, Wikimedia...)"
+dir = "05-my-own-dataset"
+run = "uv run telecharger_dataset.py"
+
+[tasks.tp5-data-jlg]
+description = "TP 5 - Télécharger LE dataset figé de JLG (reproductible)"
+dir = "05-my-own-dataset"
+run = "uv run telecharger_dataset_jlg.py"
+
+[tasks.tp5]
+description = "TP 5 - Images personnelles (créer son dataset, transfer learning)"
+dir = "05-my-own-dataset"
+run = "uv run main.py"

@@ -9,3 +9,6 @@ resultat.png
 
 # Jeux de données téléchargés (ex. MNIST au TP 4)
 data/
+
+# Dataset personnel construit par l'étudiant (TP 5)
+05-my-own-dataset/dataset/
