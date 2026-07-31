@@ -23,3 +23,8 @@ run = "uv run main.py"
 description = "TP 3 - XOR et couche cachée (pourquoi plusieurs neurones)"
 dir = "03-xor-couche-cachee"
 run = "uv run main.py"
+
+[tasks.tp4]
+description = "TP 4 - Reconnaissance de chiffres MNIST (PyTorch)"
+dir = "04-mnist-pytorch"
+run = "uv run main.py"

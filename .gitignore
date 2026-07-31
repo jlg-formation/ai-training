@@ -6,3 +6,6 @@ __pycache__/
 # Sorties générées par les TP
 resultat.png
 *.png
+
+# Jeux de données téléchargés (ex. MNIST au TP 4)
+data/
