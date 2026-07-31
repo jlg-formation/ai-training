@@ -128,15 +128,15 @@ else:
     # Vocabulaire restreint aux seuls mots discriminants
     vocabulaire = sorted(mots_spam + mots_neutres)
 
-# N = nombre de mots du vocabulaire = nombre d'ENTRÉES (et de poids) du neurone.
-N = len(vocabulaire)
+# V = taille du vocabulaire = nombre d'ENTRÉES (et de poids) du neurone.
+V = len(vocabulaire)
 
 index_mot = {mot: i for i, mot in enumerate(vocabulaire)}
 
 
 def vectoriser(phrases):
-    """Transforme une liste de phrases en matrice (n_phrases x N)."""
-    X = np.zeros((len(phrases), N))
+    """Transforme une liste de phrases en matrice (n_phrases x V)."""
+    X = np.zeros((len(phrases), V))
     for i, phrase in enumerate(phrases):
         for mot in phrase.split():
             if mot in index_mot:            # les mots hors vocabulaire sont ignorés
@@ -153,7 +153,7 @@ X_test = vectoriser(phrases_test)
 # ----------------------------------------------------------------------
 # z = w . x + b          (comme au TP 1, mais x et w sont des vecteurs)
 # p = sigmoid(z)         (on écrase z entre 0 et 1 : c'est une PROBABILITÉ)
-w = np.zeros(N)   # N poids : un par mot du vocabulaire (= une entrée du neurone)
+w = np.zeros(V)   # V poids : un par mot du vocabulaire (= une entrée du neurone)
 b = 0.0
 
 
@@ -200,7 +200,7 @@ def main():
     global w, b
 
     print(f"Mode VOCAB_COMPLET = {VOCAB_COMPLET}")
-    print(f"Taille du vocabulaire N (nb d'entrées/poids) : {N}")
+    print(f"Taille du vocabulaire V (nb d'entrées/poids) : {V}")
     print(f"Exemples d'entraînement : {len(y_train)} | de test : {len(y_test)}\n")
 
     historique_train = []

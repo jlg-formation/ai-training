@@ -10,8 +10,8 @@ Apprendre à un **seul neurone** à classer des phrases en deux catégories :
 On réutilise **exactement** le neurone et la descente de gradient du TP 1. Les
 nouveautés :
 
-- le neurone a maintenant **N entrées** (une par mot du vocabulaire), donc **N
-  poids**, au lieu d'une seule entrée au TP 1 ;
+- le neurone a maintenant **V entrées** (une par mot du vocabulaire, $V$ = taille
+  du vocabulaire), donc **V poids**, au lieu d'une seule entrée au TP 1 ;
 - la sortie passe dans une **sigmoïde** : elle devient une **probabilité** entre
   `0` et `1` (au lieu d'une valeur quelconque) ;
 - la perte devient la **BCE** (entropie croisée binaire) au lieu de la MSE.
@@ -34,7 +34,7 @@ Exemple avec le vocabulaire `[bonjour, gratuit, projet]` :
 ## Le modèle
 
 Comme au TP 1, mais l'entrée `x` et les poids `w` sont maintenant des
-**vecteurs** de taille **N** (un poids par mot du vocabulaire) :
+**vecteurs** de taille **V** (un poids par mot du vocabulaire) :
 
 ```
 z = w · x + b            (produit scalaire)
@@ -42,7 +42,7 @@ p = sigmoid(z)           probabilité que la phrase soit du spam
 ```
 
 Chaque **synapse** (poids `w`) est liée à **un mot du vocabulaire choisi**. Le
-**nombre total de synapses = la taille N de ce vocabulaire**, et non le nombre de
+**nombre total de synapses = la taille V de ce vocabulaire**, et non le nombre de
 mots d'une phrase. Un mot présent dans une phrase mais **absent du vocabulaire**
 n'a aucune synapse : il est tout simplement ignoré. Un poids positif tire vers
 « spam », un poids négatif vers « non-spam ».

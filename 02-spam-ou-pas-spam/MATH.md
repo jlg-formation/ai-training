@@ -14,14 +14,25 @@ exactement comme au TP 1. Voici pourquoi.
 
 ## 1) Le modèle
 
-Chaque phrase est un vecteur de nombres $x = (x_1, \dots, x_d)$ (le sac de
-mots). Le neurone calcule d'abord une valeur réelle :
+Chaque phrase est un vecteur de nombres $x = (x_1, \dots, x_V)$ (le sac de
+mots, $V$ = taille du vocabulaire). Le neurone calcule d'abord une valeur
+réelle :
 
 $$
-z = w \cdot x + b = \sum_{j=1}^{d} w_j\,x_j + b
+z = w \cdot x + b = \sum_{j=1}^{V} w_j\,x_j + b
 $$
 
-puis l'écrase entre $0$ et $1$ avec la **sigmoïde** pour en faire une
+$z$ est un **score brut** : un simple nombre réel, non borné (il peut aller de
+$-\infty$ à $+\infty$). C'est la **somme pondérée** des mots de la phrase : chaque
+mot présent ($x_j$) ajoute son poids $w_j$, et le biais $b$ décale le tout.
+Intuitivement, $z$ mesure à quel point la phrase **penche vers le spam** :
+
+- $z > 0$ : la phrase penche **spam** (d'autant plus que $z$ est grand) ;
+- $z < 0$ : elle penche **non-spam** ;
+- $z = 0$ : parfaitement indécis.
+
+Ce score n'est pas encore une probabilité (il peut valoir $-4$ ou $+12$). On
+l'écrase donc entre $0$ et $1$ avec la **sigmoïde** pour en faire une
 **probabilité** :
 
 $$
@@ -46,7 +57,8 @@ def predire_proba(X, w, b):
 ## 2) Pourquoi pas la MSE ? La perte BCE
 
 Avec une probabilité, on n'utilise pas l'erreur quadratique mais l'**entropie
-croisée binaire** (*Binary Cross-Entropy*). Pour $N$ exemples :
+croisée binaire** (*Binary Cross-Entropy*). Pour $N$ exemples (ici $N$ =
+nombre de phrases d'entraînement) :
 
 $$
 L = \frac{1}{N} \sum_{i=1}^{N}
@@ -84,33 +96,33 @@ C'est ce qui va faire disparaître tous les termes compliqués.
 
 ## 4) Le gradient se simplifie en $p - y$
 
-On dérive la perte d'un exemple $L_i = -\big[y\log p + (1-y)\log(1-p)\big]$ par
-rapport à $z$, avec $p = \sigma(z)$.
+On dérive la perte d'un exemple $L_i = -\big[y_i\log p_i + (1-y_i)\log(1-p_i)\big]$ par
+rapport à $z_i$, avec $p_i = \sigma(z_i)$.
 
-**Étape a — dériver $L$ par rapport à $p$ :**
-
-$$
-\frac{\partial L_i}{\partial p}
-= -\frac{y}{p} + \frac{1 - y}{1 - p}
-= \frac{p - y}{p\,(1 - p)}
-$$
-
-**Étape b — dériver $p$ par rapport à $z$** (propriété du §3) :
+**Étape a — dériver $L_i$ par rapport à $p_i$ :**
 
 $$
-\frac{\partial p}{\partial z} = p\,(1 - p)
+\frac{\partial L_i}{\partial p_i}
+= -\frac{y_i}{p_i} + \frac{1 - y_i}{1 - p_i}
+= \frac{p_i - y_i}{p_i\,(1 - p_i)}
 $$
 
-**Étape c — règle de la chaîne :** on multiplie, et $p(1-p)$ se simplifie :
+**Étape b — dériver $p_i$ par rapport à $z_i$** (propriété du §3) :
 
 $$
-\frac{\partial L_i}{\partial z}
-= \frac{p - y}{p\,(1 - p)} \cdot p\,(1 - p)
-= p - y
+\frac{\partial p_i}{\partial z_i} = p_i\,(1 - p_i)
+$$
+
+**Étape c — règle de la chaîne :** on multiplie, et $p_i(1-p_i)$ se simplifie :
+
+$$
+\frac{\partial L_i}{\partial z_i}
+= \frac{p_i - y_i}{p_i\,(1 - p_i)} \cdot p_i\,(1 - p_i)
+= p_i - y_i
 $$
 
 $$
-\boxed{\;\frac{\partial L_i}{\partial z} = p - y\;}
+\boxed{\;\frac{\partial L_i}{\partial z_i} = p_i - y_i\;}
 $$
 
 Tout le reste s'évanouit : c'est **la même « erreur »** qu'au TP 1.
@@ -119,8 +131,13 @@ Tout le reste s'évanouit : c'est **la même « erreur »** qu'au TP 1.
 
 ## 5) Gradients par rapport aux poids
 
-Comme $z = w \cdot x + b$, on a $\dfrac{\partial z}{\partial w_j} = x_j$ et
-$\dfrac{\partial z}{\partial b} = 1$. En moyennant sur les $N$ exemples :
+Rappel : la perte totale est la **moyenne** des pertes par exemple,
+$L = \dfrac{1}{N}\sum_{i=1}^{N} L_i$. Sa dérivée est donc la **moyenne des
+dérivées** des $L_i$ (la dérivation passe à travers la somme).
+
+Comme $z_i = w \cdot x_i + b$, on a $\dfrac{\partial z_i}{\partial w_j} = x_{ij}$ et
+$\dfrac{\partial z_i}{\partial b} = 1$. En combinant avec $\dfrac{\partial L_i}{\partial z_i} = p_i - y_i$ (§4)
+et en moyennant sur les $N$ exemples :
 
 $$
 \frac{\partial L}{\partial w_j} = \frac{1}{N} \sum_{i=1}^{N} (p_i - y_i)\,x_{ij}
@@ -131,10 +148,34 @@ $$
 En notation matricielle (avec $X$ la matrice des sacs de mots) :
 
 $$
+X =
+\begin{pmatrix}
+x_{11} & x_{12} & \cdots & x_{1V} \\
+x_{21} & x_{22} & \cdots & x_{2V} \\
+\vdots & \vdots & \ddots & \vdots \\
+x_{N1} & x_{N2} & \cdots & x_{NV}
+\end{pmatrix}
+=
+\begin{pmatrix}
+x_1^\top \\ x_2^\top \\ \vdots \\ x_N^\top
+\end{pmatrix}
+$$
+
+Chaque **ligne** $i$ est le sac de mots $x_i$ d'une phrase ($N$ phrases
+d'entraînement au total) ; chaque **colonne** $j$ correspond à un mot du
+vocabulaire ($V$ mots). Le terme $x_{ij}$ est le nombre d'occurrences du
+mot $j$ dans la phrase $i$. Dans le code, c'est exactement `X_train` (de forme
+`(N, V)`). Les gradients s'écrivent alors :
+
+$$
 \nabla_w L = \frac{1}{N}\, X^\top (p - y)
 \qquad
-\nabla_b L = \text{moyenne}(p - y)
+\nabla_b L = \frac{1}{N} \sum_{i=1}^{N} (p_i - y_i)
 $$
+
+où $p = (p_1, \dots, p_N)^\top$ est le vecteur des probabilités prédites (une
+par phrase) et $y = (y_1, \dots, y_N)^\top$ celui des vraies étiquettes. Dans le
+code, ce sont `p_train` et `y_train`.
 
 Ce qui donne, dans le code :
 
