@@ -33,13 +33,40 @@ Exemple avec le vocabulaire `[bonjour, gratuit, projet]` :
 
 ## Le modèle
 
-Comme au TP 1, mais l'entrée `x` et les poids `w` sont maintenant des
-**vecteurs** de taille **V** (un poids par mot du vocabulaire) :
+Comme au TP 1, mais l'entrée $\mathbf{x}$ et les poids $\mathbf{w}$ sont
+maintenant des **vecteurs** de taille **V** (un poids par mot du vocabulaire) :
 
+$$
+z = \mathbf{w} \cdot \mathbf{x} + b \qquad \text{(produit scalaire)}
+$$
+
+$$
+p = \sigma(z) \qquad \text{(probabilité que la phrase soit du spam)}
+$$
+
+> **Convention de notation.** Les **vecteurs** sont en **gras minuscule**
+> ($\mathbf{x}$, $\mathbf{w}$), la **matrice** de tous les sacs de mots en
+> **majuscule grasse** ($\mathbf{X}$, voir [MATH.md](MATH.md)), et les
+> **scalaires** en maigre ($z$, $b$).
+
+### Topologie du réseau
+
+```mermaid
+graph LR
+    x1(("x<sub>1</sub>")) -- "w<sub>1</sub>" --> N["neurone<br/>z = <b>w</b>·<b>x</b> + b<br/>p = σ(z)"]
+    x2(("x<sub>2</sub>")) -- "w<sub>2</sub>" --> N
+    x3(("x<sub>3</sub>")) -- "w<sub>3</sub>" --> N
+    dots["⋮"]:::vide ~~~ N
+    xv(("x<sub>V</sub>")) -- "w<sub>V</sub>" --> N
+    b(("1")) -- "b" --> N
+    N --> p(("p ∈ [0,1]"))
+    classDef vide fill:none,stroke:none;
 ```
-z = w · x + b            (produit scalaire)
-p = sigmoid(z)           probabilité que la phrase soit du spam
-```
+
+**V entrées** (une par mot du vocabulaire) et donc **V poids**, contre une seule
+entrée au TP 1. Le neurone calcule d'abord le score $z = \mathbf{w}\cdot\mathbf{x} + b$,
+puis lui applique **en interne** la **sigmoïde** $\sigma$ qui le transforme en
+probabilité entre `0` et `1`. La sigmoïde fait donc **partie** du neurone.
 
 Chaque **synapse** (poids `w`) est liée à **un mot du vocabulaire choisi**. Le
 **nombre total de synapses = la taille V de ce vocabulaire**, et non le nombre de
@@ -90,10 +117,10 @@ apprendrait plus lentement et resterait bloquée sur les erreurs les plus sûres
 
 À chaque **epoch** :
 
-1. On calcule les probabilités `p = sigmoid(w·x + b)`.
-2. On calcule l'erreur `p - y`.
+1. On calcule les probabilités $\mathbf{p} = \sigma(\mathbf{X}\,\mathbf{w} + b)$.
+2. On calcule l'erreur $\mathbf{p} - \mathbf{y}$.
 3. On calcule le **gradient** (même forme qu'au TP 1, en version vecteur).
-4. On déplace `w` et `b` dans le sens qui **fait diminuer la loss**.
+4. On déplace $\mathbf{w}$ et `b` dans le sens qui **fait diminuer la loss**.
 
 Le détail mathématique (pourquoi le gradient se simplifie en `p - y`) est dans
 [MATH.md](MATH.md).

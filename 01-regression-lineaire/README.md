@@ -25,6 +25,18 @@ Un neurone unique calcule simplement :
 y_pred = a * x + b
 ```
 
+### Topologie du réseau
+
+```mermaid
+graph LR
+    x(("x")) -- "a" --> N["neurone<br/>(a·x + b)"]
+    b(("1")) -- "b" --> N
+    N --> ypred(("y_pred"))
+```
+
+Une seule entrée `x`, un seul neurone, une seule sortie. Le poids `a` pondère
+l'entrée et le biais `b` (branché sur une entrée constante `1`) décale la droite.
+
 Au départ, `a` et `b` sont aléatoires. L'entraînement doit les faire converger
 vers `a ≈ 2` et `b ≈ 3`.
 

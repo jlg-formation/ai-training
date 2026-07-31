@@ -46,6 +46,31 @@ couche cachée : H neurones, activation ReLU        (W1, b1)
 sortie : 1 neurone, activation sigmoïde  → proba   (W2, b2)
 ```
 
+### Topologie du réseau
+
+```mermaid
+graph LR
+    x1(("x₁")) --> h1["h₁ (ReLU)"]
+    x1 --> h2["h₂ (ReLU)"]
+    x1 --> hh["… (H neurones)"]
+    x2(("x₂")) --> h1
+    x2 --> h2
+    x2 --> hh
+    h1 -- "W2" --> O["neurone<br/>sigmoïde"]
+    h2 -- "W2" --> O
+    hh -- "W2" --> O
+    O --> p(("p ∈ [0,1]"))
+    subgraph entree["entrée"]
+        x1
+        x2
+    end
+    subgraph cachee["couche cachée (H neurones, ReLU)"]
+        h1
+        h2
+        hh
+    end
+```
+
 Deux couches de poids au lieu d'une :
 
 - `W1` (2 × H) + `b1` : de l'entrée vers la couche cachée ;

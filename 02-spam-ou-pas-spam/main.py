@@ -151,6 +151,10 @@ X_test = vectoriser(phrases_test)
 # ----------------------------------------------------------------------
 # 3) Le modèle : un seul neurone + sigmoïde  ->  probabilité de spam
 # ----------------------------------------------------------------------
+# Convention de nommage (comme dans README.md / MATH.md) :
+#   - MAJUSCULE -> matrice   : X (tous les sacs de mots empilés, forme N x V)
+#   - minuscule -> vecteur   : w (les poids), p, y
+#   - maigre    -> scalaire  : z, b
 # z = w . x + b          (comme au TP 1, mais x et w sont des vecteurs)
 # p = sigmoid(z)         (on écrase z entre 0 et 1 : c'est une PROBABILITÉ)
 w = np.zeros(V)   # V poids : un par mot du vocabulaire (= une entrée du neurone)

@@ -14,12 +14,12 @@ exactement comme au TP 1. Voici pourquoi.
 
 ## 1) Le modèle
 
-Chaque phrase est un vecteur de nombres $x = (x_1, \dots, x_V)$ (le sac de
-mots, $V$ = taille du vocabulaire). Le neurone calcule d'abord une valeur
-réelle :
+Chaque phrase est un vecteur de nombres $\mathbf{x} = (x_1, \dots, x_V)$ (le sac
+de mots, $V$ = taille du vocabulaire ; les composantes $x_j$ sont des
+scalaires). Le neurone calcule d'abord une valeur réelle :
 
 $$
-z = w \cdot x + b = \sum_{j=1}^{V} w_j\,x_j + b
+z = \mathbf{w} \cdot \mathbf{x} + b = \sum_{j=1}^{V} w_j\,x_j + b
 $$
 
 $z$ est un **score brut** : un simple nombre réel, non borné (il peut aller de
@@ -148,7 +148,7 @@ Rappel : la perte totale est la **moyenne** des pertes par exemple,
 $L = \dfrac{1}{N}\sum_{i=1}^{N} L_i$. Sa dérivée est donc la **moyenne des
 dérivées** des $L_i$ (la dérivation passe à travers la somme).
 
-Comme $z_i = w \cdot x_i + b$, on a $\dfrac{\partial z_i}{\partial w_j} = x_{ij}$ et
+Comme $z_i = \mathbf{w} \cdot \mathbf{x}_i + b$, on a $\dfrac{\partial z_i}{\partial w_j} = x_{ij}$ et
 $\dfrac{\partial z_i}{\partial b} = 1$. En combinant avec $\dfrac{\partial L_i}{\partial z_i} = p_i - y_i$ (§4)
 et en moyennant sur les $N$ exemples :
 
@@ -158,10 +158,10 @@ $$
 \frac{\partial L}{\partial b} = \frac{1}{N} \sum_{i=1}^{N} (p_i - y_i)
 $$
 
-En notation matricielle (avec $X$ la matrice des sacs de mots) :
+En notation matricielle (avec $\mathbf{X}$ la matrice des sacs de mots) :
 
 $$
-X =
+\mathbf{X} =
 \begin{pmatrix}
 x_{11} & x_{12} & \cdots & x_{1V} \\
 x_{21} & x_{22} & \cdots & x_{2V} \\
@@ -170,24 +170,25 @@ x_{N1} & x_{N2} & \cdots & x_{NV}
 \end{pmatrix}
 =
 \begin{pmatrix}
-x_1^\top \\ x_2^\top \\ \vdots \\ x_N^\top
+\mathbf{x}_1^\top \\ \mathbf{x}_2^\top \\ \vdots \\ \mathbf{x}_N^\top
 \end{pmatrix}
 $$
 
-Chaque **ligne** $i$ est le sac de mots $x_i$ d'une phrase ($N$ phrases
+Chaque **ligne** $i$ est le sac de mots $\mathbf{x}_i$ d'une phrase ($N$ phrases
 d'entraînement au total) ; chaque **colonne** $j$ correspond à un mot du
 vocabulaire ($V$ mots). Le terme $x_{ij}$ est le nombre d'occurrences du
 mot $j$ dans la phrase $i$. Dans le code, c'est exactement `X_train` (de forme
 `(N, V)`). Les gradients s'écrivent alors :
 
 $$
-\nabla_w L = \frac{1}{N}\, X^\top (p - y)
+\nabla_{\mathbf{w}} L = \frac{1}{N}\, \mathbf{X}^\top (\mathbf{p} - \mathbf{y})
 \qquad
 \nabla_b L = \frac{1}{N} \sum_{i=1}^{N} (p_i - y_i)
 $$
 
-où $p = (p_1, \dots, p_N)^\top$ est le vecteur des probabilités prédites (une
-par phrase) et $y = (y_1, \dots, y_N)^\top$ celui des vraies étiquettes. Dans le
+où $\mathbf{p} = (p_1, \dots, p_N)^\top$ est le vecteur des probabilités prédites
+(une par phrase) et $\mathbf{y} = (y_1, \dots, y_N)^\top$ celui des vraies
+étiquettes. Dans le
 code, ce sont `p_train` et `y_train`.
 
 Ce qui donne, dans le code :
