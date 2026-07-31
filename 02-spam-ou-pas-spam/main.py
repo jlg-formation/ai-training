@@ -29,8 +29,8 @@ np.random.seed(0)
 # ======================================================================
 # CONSTANTE PÉDAGOGIQUE : bascule entre run « sain » et run « overfit »
 # ======================================================================
-# False -> vocabulaire restreint (mots vraiment utiles) + beaucoup d'exemples
-# True  -> vocabulaire complet (avec plein de mots rares) + peu d'exemples
+# False -> vocabulaire restreint (mots vraiment utiles) + beaucoup d'exemples d'entraînement
+# True  -> vocabulaire complet (avec plein de mots rares) + peu d'exemples d'entraînement
 #          => le modèle mémorise les mots rares : train ~100 %, test moins bon.
 VOCAB_COMPLET = False
 
@@ -128,12 +128,15 @@ else:
     # Vocabulaire restreint aux seuls mots discriminants
     vocabulaire = sorted(mots_spam + mots_neutres)
 
+# N = nombre de mots du vocabulaire = nombre d'ENTRÉES (et de poids) du neurone.
+N = len(vocabulaire)
+
 index_mot = {mot: i for i, mot in enumerate(vocabulaire)}
 
 
 def vectoriser(phrases):
-    """Transforme une liste de phrases en matrice (n_phrases x taille_vocab)."""
-    X = np.zeros((len(phrases), len(vocabulaire)))
+    """Transforme une liste de phrases en matrice (n_phrases x N)."""
+    X = np.zeros((len(phrases), N))
     for i, phrase in enumerate(phrases):
         for mot in phrase.split():
             if mot in index_mot:            # les mots hors vocabulaire sont ignorés
@@ -150,7 +153,7 @@ X_test = vectoriser(phrases_test)
 # ----------------------------------------------------------------------
 # z = w . x + b          (comme au TP 1, mais x et w sont des vecteurs)
 # p = sigmoid(z)         (on écrase z entre 0 et 1 : c'est une PROBABILITÉ)
-w = np.zeros(len(vocabulaire))   # un poids par mot du vocabulaire
+w = np.zeros(N)   # N poids : un par mot du vocabulaire (= une entrée du neurone)
 b = 0.0
 
 
@@ -197,7 +200,7 @@ def main():
     global w, b
 
     print(f"Mode VOCAB_COMPLET = {VOCAB_COMPLET}")
-    print(f"Taille du vocabulaire (nb de poids) : {len(vocabulaire)}")
+    print(f"Taille du vocabulaire N (nb d'entrées/poids) : {N}")
     print(f"Exemples d'entraînement : {len(y_train)} | de test : {len(y_test)}\n")
 
     historique_train = []
@@ -247,20 +250,32 @@ def main():
     # ------------------------------------------------------------------
     # On affiche la proba de spam sur quelques phrases, dont des cas ambigus
     # qui doivent tomber près de 0.5.
+    # Chaque phrase vient avec sa réponse ATTENDUE : 1 = spam, 0 = normal.
     phrases_demo = [
-        "gratuit promotion cliquez",     # très spam
-        "gagné cadeau urgent argent",    # très spam
-        "bonjour réunion demain",        # clairement normal
-        "rendez-vous document midi",     # clairement normal
-        "gratuit réunion",               # ambigu : 1 mot spam + 1 mot neutre -> ~0.5
-        "offre argent bonjour demain",   # ambigu : 2 spam + 2 neutres -> ~0.5
+        ("gratuit promotion cliquez", 1),      # très spam
+        ("gagné cadeau urgent argent", 1),     # très spam
+        ("bonjour réunion demain", 0),         # clairement normal
+        ("rendez-vous document midi", 0),      # clairement normal
+        ("gratuit réunion", 1),                # ambigu (1 spam + 1 neutre) : proba ~0.5
+        ("offre argent bonjour demain", 0),    # ambigu (2 spam + 2 neutres) : proba ~0.5
     ]
-    proba_demo = predire_proba(vectoriser(phrases_demo), w, b)
-    print("\nProbabilité de SPAM sur des phrases-test :")
-    for phrase, proba in zip(phrases_demo, proba_demo):
-        etiquette = "SPAM " if proba >= 0.5 else "normal"
-        ambigu = "  <-- incertain (~0.5)" if 0.35 < proba < 0.65 else ""
-        print(f"  {proba:5.1%}  [{etiquette}]  \"{phrase}\"{ambigu}")
+    textes = [phrase for phrase, _ in phrases_demo]
+    proba_demo = predire_proba(vectoriser(textes), w, b)
+    print("\nProbabilité de SPAM sur des phrases de démonstration :")
+    for (phrase, attendu), proba in zip(phrases_demo, proba_demo):
+        prediction = 1 if proba >= 0.5 else 0
+        predit = "SPAM  " if prediction == 1 else "normal"
+        voulu = "SPAM  " if attendu == 1 else "normal"
+        if 0.35 < proba < 0.65:                 # proba proche de 0.5 : le neurone hésite
+            verdict = "? "
+        elif prediction == attendu:
+            verdict = "OK"
+        else:
+            verdict = "KO"
+        print(
+            f"  [{verdict}]  proba={proba:5.1%}  "
+            f"prédit={predit}  attendu={voulu}  \"{phrase}\""
+        )
 
     # ------------------------------------------------------------------
     # 8) Visualisation : la loss train vs test au fil des epochs

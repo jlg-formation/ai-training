@@ -7,9 +7,11 @@ Apprendre à un **seul neurone** à classer des phrases en deux catégories :
 - **spam** (étiquette `1`)
 - **non-spam** (étiquette `0`)
 
-On réutilise **exactement** le neurone et la descente de gradient du TP 1. La
-**seule** nouveauté :
+On réutilise **exactement** le neurone et la descente de gradient du TP 1. Les
+nouveautés :
 
+- le neurone a maintenant **N entrées** (une par mot du vocabulaire), donc **N
+  poids**, au lieu d'une seule entrée au TP 1 ;
 - la sortie passe dans une **sigmoïde** : elle devient une **probabilité** entre
   `0` et `1` (au lieu d'une valeur quelconque) ;
 - la perte devient la **BCE** (entropie croisée binaire) au lieu de la MSE.
@@ -32,12 +34,29 @@ Exemple avec le vocabulaire `[bonjour, gratuit, projet]` :
 ## Le modèle
 
 Comme au TP 1, mais l'entrée `x` et les poids `w` sont maintenant des
-**vecteurs** (un poids par mot) :
+**vecteurs** de taille **N** (un poids par mot du vocabulaire) :
 
 ```
 z = w · x + b            (produit scalaire)
 p = sigmoid(z)           probabilité que la phrase soit du spam
 ```
+
+Chaque **synapse** (poids `w`) est liée à **un mot du vocabulaire choisi**. Le
+**nombre total de synapses = la taille N de ce vocabulaire**, et non le nombre de
+mots d'une phrase. Un mot présent dans une phrase mais **absent du vocabulaire**
+n'a aucune synapse : il est tout simplement ignoré. Un poids positif tire vers
+« spam », un poids négatif vers « non-spam ».
+
+**Que met-on dans le vocabulaire ?** C'est un **choix** (voir le switch
+`VOCAB_COMPLET` plus bas). Dans ce TP, deux options :
+
+- soit une **liste choisie à la main** (VOCAB_COMPLET=False), limitée aux mots jugés utiles
+  (`mots_spam` + `mots_neutres`) ;
+- soit **tous les mots vus dans le jeu d'entraînement** (y compris les mots
+  rares et de remplissage) (VOCAB_COMPLET=True).
+
+Dans les deux cas, on ne met **que des mots vus à l'entraînement** — jamais un
+mot qui n'apparaît que dans le jeu de test (ce serait une **fuite de données**).
 
 Au départ, tous les poids valent `0`. L'entraînement les ajuste pour que `p`
 soit proche de `1` sur les spams et de `0` sur les messages normaux.
@@ -79,7 +98,7 @@ apprendrait plus lentement et resterait bloquée sur les erreurs les plus sûres
 Le détail mathématique (pourquoi le gradient se simplifie en `p - y`) est dans
 [MATH.md](MATH.md).
 
-## Le bouton `VOCAB_COMPLET` : voir le surapprentissage
+## Le switch `VOCAB_COMPLET` : voir le surapprentissage
 
 En haut de [main.py](main.py), une constante bascule entre deux régimes :
 
