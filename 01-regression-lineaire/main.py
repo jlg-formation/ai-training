@@ -53,6 +53,10 @@ def predire(x, a, b):
 # ----------------------------------------------------------------------
 # Elle mesure à quel point les prédictions sont éloignées de la réalité.
 # Plus la loss est petite, meilleur est le modèle.
+#
+# ATTENTION : cette fonction ne sert QU'À AFFICHER le progrès. Elle n'est JAMAIS
+# appelée pour entraîner le modèle : ce qui entraîne, c'est le GRADIENT (étape 4),
+# qui est la dérivée de CETTE loss (ici la MSE).
 def perte(y_pred, y):
     return np.mean((y_pred - y) ** 2)
 
@@ -83,6 +87,8 @@ def main():
         erreur = y_pred - y
 
         # c) Gradients (dérivées de la MSE par rapport à a et b)
+        # C'est ICI, et pas dans perte(), que la MSE agit sur l'entraînement :
+        # ces deux lignes SONT la dérivée de la MSE.
         grad_a = 2 * np.mean(erreur * x)
         grad_b = 2 * np.mean(erreur)
 

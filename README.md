@@ -91,6 +91,7 @@ le `.venv` partagé.
 | Dossier                                           | TP                              | Tâche mise |
 | ------------------------------------------------- | ------------------------------- | ---------- |
 | [01-regression-lineaire](01-regression-lineaire/) | Régression linéaire (1 neurone) | `tp1`      |
+| [02-spam-ou-pas-spam](02-spam-ou-pas-spam/)       | Spam ou pas spam (classification) | `tp2`    |
 
 ## Ajouter une dépendance
 

@@ -13,3 +13,8 @@ run = "uv sync"
 description = "TP 1 - Régression linéaire (1 neurone)"
 dir = "01-regression-lineaire"
 run = "uv run main.py"
+
+[tasks.tp2]
+description = "TP 2 - Spam ou pas spam (classification, 1 neurone)"
+dir = "02-spam-ou-pas-spam"
+run = "uv run main.py"
