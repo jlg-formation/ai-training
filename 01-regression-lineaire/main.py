@@ -66,7 +66,7 @@ def perte(y_pred, y):
 #   - on calcule le gradient (la pente de la loss par rapport à a et b)
 #   - on déplace a et b dans le sens qui fait DIMINUER la loss
 LEARNING_RATE = 0.01   # taille des pas ; trop grand = ça diverge, trop petit = ça rame
-EPOCHS = 400           # nombre de passages sur les données
+EPOCHS = 200           # nombre de passages sur les données
 
 
 def main():
