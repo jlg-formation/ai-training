@@ -9,16 +9,14 @@ chaîne**. C'est la **rétropropagation** (*backpropagation*).
 
 ## 1) Le réseau, couche par couche
 
-Une entrée est un point $\mathbf{x} = (x_1, x_2)$. Le réseau enchaîne deux couches.
+Le réseau sert à un **problème de classification** : dire si un échantillon
+d'entrée est de la **classe `0`** ou de la **classe `1`** (ici, les deux
+diagonales du XOR). Une entrée est un point $\mathbf{x} = (x_1, x_2)$. Le réseau
+enchaîne deux couches.
 
-> **Convention.** Vecteurs en **gras minuscule** ($\mathbf{x}$, $\mathbf{b}^{(1)}$,
-> $\mathbf{z}^{(1)}$, $\mathbf{a}^{(1)}$, $\boldsymbol{\delta}^{(1)}$), matrices en
-> **gras MAJUSCULE** ($\mathbf{X}$, $\mathbf{W}^{(1)}$, $\mathbf{W}^{(2)}$),
-> scalaires en maigre ($b^{(2)}$, $z^{(2)}$, $p$, $y$, $\delta^{(2)}$).
-> Tous les vecteurs sont des **vecteurs lignes** : $\mathbf{x}$, $\mathbf{z}^{(1)}$,
-> $\mathbf{b}^{(1)}$ ont respectivement les tailles $1 \times 2$, $1 \times H$ et
-> $1 \times H$. Un batch de $N$ exemples empile ces lignes dans $\mathbf{X}$ (taille
-> $N \times 2$), ce qui colle directement aux tableaux NumPy de forme `(N, 2)`.
+> Les conventions de notation (vecteurs lignes en gras minuscule, matrices en
+> gras MAJUSCULE, etc.) sont décrites une fois pour toutes dans le
+> [README.md § Conventions mathématiques](../README.md#conventions-mathématiques).
 
 **Couche cachée** ($H$ neurones), avec les poids $\mathbf{W}^{(1)}$ (taille $2 \times H$)
 et les biais $\mathbf{b}^{(1)}$ (taille $1 \times H$) :
@@ -38,7 +36,8 @@ z^{(2)} = \mathbf{a}^{(1)} \mathbf{W}^{(2)} + b^{(2)}
 p = \sigma\!\big(z^{(2)}\big)
 $$
 
-$p$ est la probabilité de la classe $1$, et $y \in \{0, 1\}$ la vraie étiquette.
+$p$ est la probabilité que l'échantillon soumis soit de la classe $1$ (et non $0$),
+et $y \in \{0, 1\}$ la vraie étiquette.
 La perte est la **même BCE** qu'au TP 2 :
 
 $$
@@ -48,6 +47,10 @@ $$
 ---
 
 ## 2) La fonction ReLU et sa dérivée
+
+**ReLU** signifie *Rectified Linear Unit* (« unité linéaire rectifiée ») : elle
+laisse passer les valeurs positives telles quelles et **rectifie** les négatives
+à $0$.
 
 $$
 \operatorname{ReLU}(z) = \max(0,\, z)
@@ -121,8 +124,8 @@ $$
   \odot \operatorname{ReLU}'\!\big(\mathbf{z}^{(1)}\big)
 $$
 
-où $\odot$ est le produit **élément par élément** (chaque neurone caché garde ou
-coupe son propre gradient selon que son $z^{(1)}$ était positif ou non).
+où $\odot$ est le **produit de Hadamard** (produit **élément par élément**) : chaque neurone caché garde ou
+coupe son propre gradient selon que son $z^{(1)}$ était positif ou non.
 
 ### Étape d — gradients de la couche cachée
 
