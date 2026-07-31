@@ -31,6 +31,19 @@ Intuitivement, $z$ mesure à quel point la phrase **penche vers le spam** :
 - $z < 0$ : elle penche **non-spam** ;
 - $z = 0$ : parfaitement indécis.
 
+Ce score brut porte un nom standard : on l'appelle le **logit**. Le mot vient de
+la fonction **logit**, qui est l'**inverse de la sigmoïde** :
+
+$$
+z = \operatorname{logit}(p) = \ln\!\left(\frac{p}{1 - p}\right)
+$$
+
+C'est le **log des cotes** (*log-odds*) : le logarithme du rapport
+$\frac{p}{1 - p}$ (probabilité spam / probabilité non-spam). Autrement dit, la
+sigmoïde transforme un logit en probabilité, et le logit fait le chemin inverse.
+On retrouve bien l'intuition ci-dessus : $z > 0$ ⇔ cotes en faveur du spam
+($p > 0{,}5$), $z = 0$ ⇔ cotes égales ($p = 0{,}5$).
+
 Ce score n'est pas encore une probabilité (il peut valoir $-4$ ou $+12$). On
 l'écrase donc entre $0$ et $1$ avec la **sigmoïde** pour en faire une
 **probabilité** :
