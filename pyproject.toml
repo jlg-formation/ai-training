@@ -12,3 +12,18 @@ dependencies = [
     "torch>=2.13.0",
     "torchvision>=0.28.0",
 ]
+
+# ---- PyTorch avec support GPU (CUDA 12.6) ----
+# On tire torch/torchvision depuis l'index CUDA de PyTorch (et non la build CPU
+# de PyPI) pour que le TP 5 utilise le GPU quand il y en a un. L'index cu126
+# supporte encore les GPU Pascal (ex. GTX 1050). Ces wheels fonctionnent AUSSI
+# sur une machine sans GPU (torch.cuda.is_available() renvoie alors False) : le
+# code bascule tout seul sur le CPU, au prix d'un téléchargement plus lourd.
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
