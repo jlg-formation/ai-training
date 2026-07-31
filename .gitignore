@@ -1,0 +1,8 @@
+# Environnement Python partagé (uv) à la racine
+.venv/
+__pycache__/
+*.pyc
+
+# Sorties générées par les TP
+resultat.png
+*.png

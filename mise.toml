@@ -1,0 +1,15 @@
+# Configuration mise (https://mise.jdx.dev)
+# Gère les outils (Python, uv) et les tâches du projet.
+
+[tools]
+python = "3.12"
+uv = "latest"
+
+[tasks.install]
+description = "Installer les dépendances partagées (uv sync)"
+run = "uv sync"
+
+[tasks.tp1]
+description = "TP 1 - Régression linéaire (1 neurone)"
+dir = "01-regression-lineaire"
+run = "uv run main.py"
