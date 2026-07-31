@@ -14,6 +14,12 @@ l'installation et [SUJETS_TPS.md](SUJETS_TPS.md) pour les énoncés et la théor
 - **Ne pas sur-optimiser.** Éviter les abstractions, la vectorisation obscure ou
   les patterns avancés qui masquent la notion enseignée. Préférer un code long
   et explicite à un code court et malin.
+- **Écrire les choix dans les fichiers, pas seulement dans le chat.** Dès qu'une
+  décision de conception ou de notation est prise (ex. « le vocabulaire ne se
+  construit que sur le train », « on note $V$ la taille du vocabulaire »),
+  l'inscrire **immédiatement** dans le `README.md` ou le `MATH.md` concerné. Une
+  explication donnée seulement en réponse ne suffit pas : le fichier doit être
+  auto-suffisant pour l'étudiant.
 
 ## Environnement & commandes (Windows / PowerShell)
 
@@ -48,8 +54,43 @@ Un dossier par TP nommé `NN-slug` (ex. `01-regression-lineaire`) contenant
 - `README.md` — objectif, fonctionnement, « ce que tu dois observer », « à
   expérimenter ».
 - `MATH.md` (optionnel) — dérivation mathématique en KaTeX (`$...$`, `$$...$$`).
+  Suivre les **conventions mathématiques** du projet (vecteurs **lignes**,
+  notation gras/casse, produit $\odot$…) décrites dans
+  [README.md § Conventions mathématiques](README.md#conventions-mathématiques).
+  Les formules doivent correspondre **ligne pour ligne** au code NumPy du TP.
 
 Voir [01-regression-lineaire](01-regression-lineaire/) comme modèle de référence.
+
+## Discipline de notation dans les `MATH.md`
+
+Ces règles évitent les allers-retours les plus fréquents sur les dérivations :
+
+- **Définir chaque symbole dès sa première apparition.** N'introduire ni
+  matrice, ni vecteur, ni scalaire ($\mathbf{X}$, $\mathbf{p}$, $z$…) sans dire
+  aussitôt ce qu'il vaut et sa taille.
+- **Un symbole = une seule signification.** Ne jamais réutiliser une lettre pour
+  deux choses (ex. $N$ = nombre d'exemples **et** $V$ = taille du vocabulaire,
+  jamais le même symbole pour les deux).
+- **Notation des indices cohérente des deux côtés d'une égalité.** Si un membre
+  porte l'indice $i$ (ex. $z_i$, $p_i$, $y_i$, $L_i$), l'autre aussi.
+- **Rappeler le lien exemple ↔ agrégat.** Toujours expliciter comment une
+  quantité par exemple se relie à sa moyenne sur le batch (ex.
+  $L = \tfrac{1}{N}\sum_i L_i$).
+- **Distinguer vecteurs lignes / colonnes.** Préciser la forme ($1 \times d$,
+  $d \times 1$) et rappeler qu'un $^\top$ bascule de l'un à l'autre.
+
+## Conventions Mermaid (diagrammes de topologie)
+
+Quand un `README.md` illustre le réseau avec un diagramme Mermaid :
+
+- **Matrices en gras MAJUSCULE**, vecteurs en gras minuscule (même convention
+  que les `MATH.md`).
+- **Indices compatibles Mermaid** : la syntaxe `x_V` ne rend pas ; utiliser une
+  écriture qui s'affiche correctement dans les nœuds.
+- **Entrées omises** : marquer la coupure par `...` entre les premières entrées
+  et la dernière (ex. entre $x_3$ et $x_V$).
+- **Sigmoïde dans le neurone** : la fonction d'activation fait partie du neurone,
+  la représenter à l'intérieur du nœud (pas comme une étape séparée).
 
 ## Conventions de code (suivre le style de TP 1)
 

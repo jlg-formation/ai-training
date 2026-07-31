@@ -56,9 +56,9 @@ graph LR
     x2(("x₂")) --> h1
     x2 --> h2
     x2 --> hh
-    h1 -- "W2" --> O["neurone<br/>sigmoïde"]
-    h2 -- "W2" --> O
-    hh -- "W2" --> O
+    h1 -- "<b>W</b><sup>(2)</sup>" --> O["neurone<br/>sigmoïde"]
+    h2 -- "<b>W</b><sup>(2)</sup>" --> O
+    hh -- "<b>W</b><sup>(2)</sup>" --> O
     O --> p(("p ∈ [0,1]"))
     subgraph entree["entrée"]
         x1
@@ -73,8 +73,14 @@ graph LR
 
 Deux couches de poids au lieu d'une :
 
-- `W1` (2 × H) + `b1` : de l'entrée vers la couche cachée ;
-- `W2` (H × 1) + `b2` : de la couche cachée vers la sortie.
+- $\mathbf{W}^{(1)}$ (2 × H) + $\mathbf{b}^{(1)}$ : de l'entrée vers la couche cachée ;
+- $\mathbf{W}^{(2)}$ (H × 1) + $b^{(2)}$ : de la couche cachée vers la sortie.
+
+> **Convention de notation.** Les **vecteurs** sont en **gras minuscule**
+> ($\mathbf{x}$, $\mathbf{b}^{(1)}$, $\mathbf{z}^{(1)}$, $\mathbf{a}^{(1)}$), la
+> **matrice** du batch et les matrices de poids en **gras MAJUSCULE**
+> ($\mathbf{X}$, $\mathbf{W}^{(1)}$, $\mathbf{W}^{(2)}$), et les **scalaires** en
+> maigre ($b^{(2)}$, $z^{(2)}$, $p$).
 
 La couche cachée « replie » l'espace : chaque neurone caché trace **sa** droite,
 et la sortie **combine** ces droites pour former une frontière **courbe** capable
@@ -121,8 +127,9 @@ fois.
 
 À chaque **epoch** :
 
-1. **Passe avant** : `z1 = X·W1 + b1`, `a1 = relu(z1)`, puis
-   `p = sigmoid(a1·W2 + b2)`.
+1. **Passe avant** : $\mathbf{z}^{(1)} = \mathbf{X}\mathbf{W}^{(1)} + \mathbf{b}^{(1)}$,
+   $\mathbf{a}^{(1)} = \operatorname{relu}(\mathbf{z}^{(1)})$, puis
+   $\mathbf{p} = \sigma(\mathbf{a}^{(1)}\mathbf{W}^{(2)} + b^{(2)})$.
 2. **Rétropropagation** : on part de l'erreur de sortie `p − y` (comme au TP 2)
    et on la fait **remonter** dans la couche cachée pour obtenir les gradients
    des 4 paquets de poids.

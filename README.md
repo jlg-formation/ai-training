@@ -94,6 +94,111 @@ le `.venv` partagé.
 | [02-spam-ou-pas-spam](02-spam-ou-pas-spam/)       | Spam ou pas spam (classification) | `tp2`    |
 | [03-xor-couche-cachee](03-xor-couche-cachee/)     | XOR et couche cachée (MLP)      | `tp3`      |
 
+## Conventions mathématiques
+
+Les fichiers `MATH.md` des TP dérivent les gradients à la main. Comme il existe
+**plusieurs notations valides** en algèbre linéaire, ce chapitre fixe les choix
+faits dans tout le projet pour éviter les surprises — notamment si tu compares
+avec un livre de référence.
+
+### Vecteurs lignes vs vecteurs colonnes
+
+C'est **le** point qui déroute le plus souvent. Deux conventions coexistent.
+Pour un **seul exemple** $\mathbf{x}$ (à $d$ entrées) et une couche à $h$
+neurones :
+
+- **Convention « colonne »** (littérature académique : Goodfellow, Bishop,
+  Murphy…). Un vecteur $\mathbf{x}$ est une **colonne** ($d \times 1$) et la
+  couche s'écrit :
+
+  $$\mathbf{z} = \mathbf{W}^\top \mathbf{x} + \mathbf{b}$$
+
+  C'est la notation mathématique classique, où un vecteur est une colonne par
+  défaut et où l'on transpose la matrice de poids.
+
+- **Convention « ligne »** (code : NumPy, PyTorch, TensorFlow). Le vecteur
+  $\mathbf{x}$ est une **ligne** ($1 \times d$) et la couche s'écrit :
+
+  $$\mathbf{z} = \mathbf{x}\,\mathbf{W} + \mathbf{b}$$
+
+Les deux décrivent **la même couche** : elles sont simplement transposées l'une
+de l'autre.
+
+> **Choix du projet : la convention « ligne ».** Tous les vecteurs
+> ($\mathbf{x}$, $\mathbf{z}$, $\mathbf{b}$, $\boldsymbol{\delta}$…) sont des
+> **vecteurs lignes**.
+
+**Pourquoi ce choix ?** Pour que les `MATH.md` correspondent **ligne pour
+ligne** au code NumPy, sans transposition mentale :
+
+| Maths (livres, colonnes)                                | Maths (ce projet, lignes)                            | Code NumPy          |
+| ------------------------------------------------------- | ---------------------------------------------------- | ------------------- |
+| $\mathbf{z} = \mathbf{W}^\top\mathbf{x} + \mathbf{b}$   | $\mathbf{z} = \mathbf{x}\,\mathbf{W} + \mathbf{b}$   | `z = x @ W + b`     |
+| $\nabla_{\mathbf{W}} = \boldsymbol{\delta}\,\mathbf{x}^\top$ | $\nabla_{\mathbf{W}} = \mathbf{x}^\top\boldsymbol{\delta}$ | `grad_W = X.T @ dz` |
+
+Concrètement, la convention ligne évite d'avoir des `.T` partout dans le code,
+ce qui est plus lisible pour débuter. Si tu lis un article de recherche, garde
+juste en tête qu'il utilise très probablement la convention colonne : passe de
+l'une à l'autre en **transposant**.
+
+### Et pour un batch ? (et un piège de dimensions)
+
+Jusqu'ici on a raisonné sur **un seul** exemple. En pratique on traite les $N$
+exemples **d'un coup** : on les empile en **lignes** dans une matrice
+$\mathbf{X}$ ($N \times d$), ce qui donne
+
+$$\mathbf{Z} = \mathbf{X}\mathbf{W} + \mathbf{b}$$
+
+où chaque **ligne** de $\mathbf{Z}$ est le $\mathbf{z}$ d'un exemple.
+
+**Mais attention, un détail cloche.** Si tu regardes les tailles, $\mathbf{X}\mathbf{W}$
+est une matrice $N \times h$ ($N$ exemples, $h$ neurones) alors que $\mathbf{b}$
+n'est qu'une **ligne** $1 \times h$. En algèbre linéaire stricte, **on ne peut
+pas additionner deux tableaux de tailles différentes** ! L'écriture
+$+\,\mathbf{b}$ est donc un **abus de notation** : tout le monde comprend qu'on
+ajoute le **même biais $\mathbf{b}$ à chaque ligne**, et le code (NumPy) le fait
+tout seul (c'est le *broadcasting*).
+
+Pour écrire la **même chose proprement**, on multiplie $\mathbf{b}$ à gauche par
+un vecteur colonne de **uns** $\mathbf{1}_N$ (taille $N \times 1$) :
+
+$$\mathbf{Z} = \mathbf{X}\mathbf{W} + \mathbf{1}_N\,\mathbf{b}
+\qquad\text{avec}\qquad
+\underbrace{\mathbf{1}_N}_{N \times 1}\underbrace{\mathbf{b}}_{1 \times h}
+= \underbrace{\mathbf{1}_N\mathbf{b}}_{N \times h}$$
+
+Le produit $\mathbf{1}_N\mathbf{b}$ est simplement la matrice $N \times h$ dont
+**chaque ligne est $\mathbf{b}$** (le biais recopié $N$ fois). Cette fois les
+deux termes sont bien en $N \times h$ et l'addition est **parfaitement
+légale** — c'est exactement ce que le broadcasting fabrique à ta place.
+
+> **À retenir :** $\mathbf{Z} = \mathbf{X}\mathbf{W} + \mathbf{b}$ est la forme
+> courte et pratique ; $\mathbf{Z} = \mathbf{X}\mathbf{W} + \mathbf{1}_N\mathbf{b}$
+> en est la version rigoureuse. Les deux disent la même chose : ajouter le même
+> biais à chaque exemple.
+
+### Notation (gras, casse)
+
+Convention typographique reprise dans chaque `MATH.md` :
+
+- **Vecteurs** : gras minuscule ($\mathbf{x}$, $\mathbf{b}$, $\mathbf{z}$,
+  $\boldsymbol{\delta}$).
+- **Matrices** : gras MAJUSCULE ($\mathbf{X}$, $\mathbf{W}$).
+- **Scalaires** : maigre ($b^{(2)}$, $z^{(2)}$, $p$, $y$).
+- **Exposants entre parenthèses** : numéro de **couche** ($\mathbf{W}^{(1)}$ =
+  couche cachée, $\mathbf{W}^{(2)}$ = couche de sortie), à ne pas confondre avec
+  une puissance.
+
+### Autres conventions
+
+- **Produit terme à terme** noté $\odot$ (produit de Hadamard), distinct du
+  produit matriciel.
+- **Moyenne sur le batch** : les gradients sont moyennés sur les $N$ exemples
+  (division par $N$), ce qui rend le pas d'apprentissage indépendant de la
+  taille du batch.
+- **KaTeX** : les formules sont écrites en `$...$` (en ligne) et `$$...$$`
+  (bloc), rendues par la plupart des lecteurs Markdown.
+
 ## Ajouter une dépendance
 
 Si un futur TP a besoin d'une nouvelle bibliothèque, on l'ajoute **une seule

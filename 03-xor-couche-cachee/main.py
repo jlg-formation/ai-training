@@ -83,6 +83,10 @@ X_train, y_train, X_test, y_test = generer_xor()
 # ----------------------------------------------------------------------
 # 2) Le modèle : 2 -> H (ReLU) -> 1 (sigmoïde)
 # ----------------------------------------------------------------------
+# Convention de nommage (comme dans README.md / MATH.md) :
+#   - MAJUSCULE -> matrice   : X (batch), W1 (2 x H), W2 (H x 1)
+#   - minuscule -> vecteur   : b1, z1, a1 (taille H), et p, y (batch)
+#   - maigre    -> scalaire  : b2, z2
 # Deux couches de poids :
 #   - W1 (2 x H) + b1 (H)  : de l'entrée vers la couche cachée
 #   - W2 (H x 1) + b2 (1)  : de la couche cachée vers la sortie

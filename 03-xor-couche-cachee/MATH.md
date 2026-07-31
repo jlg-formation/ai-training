@@ -9,22 +9,31 @@ chaîne**. C'est la **rétropropagation** (*backpropagation*).
 
 ## 1) Le réseau, couche par couche
 
-Une entrée est un point $x = (x_1, x_2)$. Le réseau enchaîne deux couches.
+Une entrée est un point $\mathbf{x} = (x_1, x_2)$. Le réseau enchaîne deux couches.
 
-**Couche cachée** ($H$ neurones), avec les poids $W^{(1)}$ (taille $2 \times H$)
-et les biais $b^{(1)}$ (taille $H$) :
+> **Convention.** Vecteurs en **gras minuscule** ($\mathbf{x}$, $\mathbf{b}^{(1)}$,
+> $\mathbf{z}^{(1)}$, $\mathbf{a}^{(1)}$, $\boldsymbol{\delta}^{(1)}$), matrices en
+> **gras MAJUSCULE** ($\mathbf{X}$, $\mathbf{W}^{(1)}$, $\mathbf{W}^{(2)}$),
+> scalaires en maigre ($b^{(2)}$, $z^{(2)}$, $p$, $y$, $\delta^{(2)}$).
+> Tous les vecteurs sont des **vecteurs lignes** : $\mathbf{x}$, $\mathbf{z}^{(1)}$,
+> $\mathbf{b}^{(1)}$ ont respectivement les tailles $1 \times 2$, $1 \times H$ et
+> $1 \times H$. Un batch de $N$ exemples empile ces lignes dans $\mathbf{X}$ (taille
+> $N \times 2$), ce qui colle directement aux tableaux NumPy de forme `(N, 2)`.
+
+**Couche cachée** ($H$ neurones), avec les poids $\mathbf{W}^{(1)}$ (taille $2 \times H$)
+et les biais $\mathbf{b}^{(1)}$ (taille $H$) :
 
 $$
-z^{(1)} = x\,W^{(1)} + b^{(1)}
+\mathbf{z}^{(1)} = \mathbf{x}\,\mathbf{W}^{(1)} + \mathbf{b}^{(1)}
 \qquad
-a^{(1)} = \operatorname{ReLU}\!\big(z^{(1)}\big)
+\mathbf{a}^{(1)} = \operatorname{ReLU}\!\big(\mathbf{z}^{(1)}\big)
 $$
 
-**Couche de sortie** (1 neurone), avec $W^{(2)}$ (taille $H \times 1$) et
+**Couche de sortie** (1 neurone), avec $\mathbf{W}^{(2)}$ (taille $H \times 1$) et
 $b^{(2)}$ :
 
 $$
-z^{(2)} = a^{(1)} W^{(2)} + b^{(2)}
+z^{(2)} = \mathbf{a}^{(1)} \mathbf{W}^{(2)} + b^{(2)}
 \qquad
 p = \sigma\!\big(z^{(2)}\big)
 $$
@@ -83,33 +92,33 @@ dérivation détaillée est dans le [MATH.md du TP 2](../02-spam-ou-pas-spam/MAT
 
 ### Étape b — gradients de la couche de sortie
 
-Comme $z^{(2)} = a^{(1)} W^{(2)} + b^{(2)}$, on a
-$\dfrac{\partial z^{(2)}}{\partial W^{(2)}} = a^{(1)}$ et
+Comme $z^{(2)} = \mathbf{a}^{(1)} \mathbf{W}^{(2)} + b^{(2)}$, on a
+$\dfrac{\partial z^{(2)}}{\partial \mathbf{W}^{(2)}} = \mathbf{a}^{(1)}$ et
 $\dfrac{\partial z^{(2)}}{\partial b^{(2)}} = 1$. Donc :
 
 $$
-\frac{\partial L}{\partial W^{(2)}} = \big(a^{(1)}\big)^{\!\top} \delta^{(2)}
+\frac{\partial L}{\partial \mathbf{W}^{(2)}} = \big(\mathbf{a}^{(1)}\big)^{\!\top} \delta^{(2)}
 \qquad
 \frac{\partial L}{\partial b^{(2)}} = \delta^{(2)}
 $$
 
 ### Étape c — faire REMONTER l'erreur dans la couche cachée
 
-L'erreur de sortie « redescend » vers les sorties des neurones cachés $a^{(1)}$.
-Comme $z^{(2)} = a^{(1)} W^{(2)} + b^{(2)}$ :
+L'erreur de sortie « redescend » vers les sorties des neurones cachés $\mathbf{a}^{(1)}$.
+Comme $z^{(2)} = \mathbf{a}^{(1)} \mathbf{W}^{(2)} + b^{(2)}$ :
 
 $$
-\frac{\partial L}{\partial a^{(1)}} = \delta^{(2)} \big(W^{(2)}\big)^{\!\top}
+\frac{\partial L}{\partial \mathbf{a}^{(1)}} = \delta^{(2)} \big(\mathbf{W}^{(2)}\big)^{\!\top}
 $$
 
-Puis on **traverse le ReLU** (étape a du §2) pour atteindre le score $z^{(1)}$.
+Puis on **traverse le ReLU** (étape a du §2) pour atteindre le score $\mathbf{z}^{(1)}$.
 On multiplie **terme à terme** par la dérivée du ReLU :
 
 $$
-\delta^{(1)}
-\;\equiv\; \frac{\partial L}{\partial z^{(1)}}
-= \underbrace{\Big(\delta^{(2)} \big(W^{(2)}\big)^{\!\top}\Big)}_{\partial L / \partial a^{(1)}}
-  \odot \operatorname{ReLU}'\!\big(z^{(1)}\big)
+\boldsymbol{\delta}^{(1)}
+\;\equiv\; \frac{\partial L}{\partial \mathbf{z}^{(1)}}
+= \underbrace{\Big(\delta^{(2)} \big(\mathbf{W}^{(2)}\big)^{\!\top}\Big)}_{\partial L / \partial \mathbf{a}^{(1)}}
+  \odot \operatorname{ReLU}'\!\big(\mathbf{z}^{(1)}\big)
 $$
 
 où $\odot$ est le produit **élément par élément** (chaque neurone caché garde ou
@@ -117,19 +126,19 @@ coupe son propre gradient selon que son $z^{(1)}$ était positif ou non).
 
 ### Étape d — gradients de la couche cachée
 
-Enfin, comme $z^{(1)} = x\,W^{(1)} + b^{(1)}$, on procède comme à l'étape b :
+Enfin, comme $\mathbf{z}^{(1)} = \mathbf{x}\,\mathbf{W}^{(1)} + \mathbf{b}^{(1)}$, on procède comme à l'étape b :
 
 $$
-\frac{\partial L}{\partial W^{(1)}} = x^{\top} \delta^{(1)}
+\frac{\partial L}{\partial \mathbf{W}^{(1)}} = \mathbf{x}^{\top} \boldsymbol{\delta}^{(1)}
 \qquad
-\frac{\partial L}{\partial b^{(1)}} = \delta^{(1)}
+\frac{\partial L}{\partial \mathbf{b}^{(1)}} = \boldsymbol{\delta}^{(1)}
 $$
 
 ---
 
 ## 4) Le résumé, et le lien avec le code
 
-En moyennant sur les $N$ exemples d'un batch (matrice $X$ de forme $N \times 2$),
+En moyennant sur les $N$ exemples d'un batch (matrice $\mathbf{X}$ de forme $N \times 2$),
 les quatre gradients sont :
 
 $$
@@ -137,19 +146,19 @@ $$
 $$
 
 $$
-\nabla_{W^{(2)}} L = \big(a^{(1)}\big)^{\!\top}\!\delta^{(2)}
+\nabla_{\mathbf{W}^{(2)}} L = \big(\mathbf{a}^{(1)}\big)^{\!\top}\!\delta^{(2)}
 \qquad
 \nabla_{b^{(2)}} L = \sum_i \delta^{(2)}_i
 $$
 
 $$
-\delta^{(1)} = \big(\delta^{(2)} (W^{(2)})^{\top}\big) \odot \operatorname{ReLU}'(z^{(1)})
+\boldsymbol{\delta}^{(1)} = \big(\delta^{(2)} (\mathbf{W}^{(2)})^{\top}\big) \odot \operatorname{ReLU}'(\mathbf{z}^{(1)})
 $$
 
 $$
-\nabla_{W^{(1)}} L = X^{\top}\!\delta^{(1)}
+\nabla_{\mathbf{W}^{(1)}} L = \mathbf{X}^{\top}\!\boldsymbol{\delta}^{(1)}
 \qquad
-\nabla_{b^{(1)}} L = \sum_i \delta^{(1)}_i
+\nabla_{\mathbf{b}^{(1)}} L = \sum_i \boldsymbol{\delta}^{(1)}_i
 $$
 
 Ce qui correspond **ligne pour ligne** au code de `retropropagation()` :
@@ -178,7 +187,7 @@ b2 -= LEARNING_RATE * grad_b2
 
 ## 5) Pourquoi un seul neurone ne peut pas séparer le XOR
 
-Un neurone unique calcule $z = w \cdot x + b$ et décide selon le signe de $z$.
+Un neurone unique calcule $z = \mathbf{w} \cdot \mathbf{x} + b$ et décide selon le signe de $z$.
 La frontière $z = 0$ est l'équation d'une **droite** (un hyperplan en dimension
 supérieure). Elle coupe le plan en **deux demi-plans**.
 
