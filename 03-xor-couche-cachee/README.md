@@ -52,13 +52,16 @@ sortie : 1 neurone, activation sigmoïde  → proba   (W2, b2)
 graph LR
     x1(("x₁")) --> h1["h₁ (ReLU)"]
     x1 --> h2["h₂ (ReLU)"]
-    x1 --> hh["… (H neurones)"]
+    x1 --> dots["⋮"]
+    x1 --> hH["h<sub>H</sub> (ReLU)"]
     x2(("x₂")) --> h1
     x2 --> h2
-    x2 --> hh
-    h1 -- "<b>W</b><sup>(2)</sup>" --> O["neurone<br/>sigmoïde"]
-    h2 -- "<b>W</b><sup>(2)</sup>" --> O
-    hh -- "<b>W</b><sup>(2)</sup>" --> O
+    x2 --> dots
+    x2 --> hH
+    h1 -- "w<sub>1</sub><sup>(2)</sup>" --> O["o (sigmoïde)"]
+    h2 -- "w<sub>2</sub><sup>(2)</sup>" --> O
+    dots -. "w<sub>…</sub><sup>(2)</sup>" .-> O
+    hH -- "w<sub>H</sub><sup>(2)</sup>" --> O
     O --> p(("p ∈ [0,1]"))
     subgraph entree["entrée"]
         x1
@@ -67,8 +70,17 @@ graph LR
     subgraph cachee["couche cachée (H neurones, ReLU)"]
         h1
         h2
-        hh
+        dots
+        hH
     end
+    subgraph sortie["couche de sortie"]
+        O
+    end
+    subgraph proba["sortie"]
+        p
+    end
+    style entree fill:#f7f7f7,stroke:#dddddd
+    style proba fill:#f7f7f7,stroke:#dddddd
 ```
 
 Deux couches de poids au lieu d'une :
