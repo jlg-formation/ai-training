@@ -53,3 +53,13 @@ run = "uv run main.py"
 description = "TP 6 - Site de reconnaissance (dessiner un chiffre à la souris)"
 dir = "06-cnn/front"
 run = ["bun install", "bun run dev"]
+
+[tasks.tp7]
+description = "TP 7 - GAN (generer des chiffres MNIST, entrainement adversaire)"
+dir = "07-gan"
+run = "uv run main.py"
+
+[tasks.tp7-site]
+description = "TP 7 - Site de generation (bouton Nouvelle image, generateur ONNX)"
+dir = "07-gan/front"
+run = ["bun install", "bun run dev"]

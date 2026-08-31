@@ -12,3 +12,6 @@ data/
 
 # Dataset personnel construit par l'étudiant (TP 5)
 05-my-own-dataset/dataset/
+
+# Aperçus générés à chaque epoch (TP 7)
+07-gan/apercus/

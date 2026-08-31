@@ -96,6 +96,7 @@ le `.venv` partagé.
 | [04-mnist-pytorch](04-mnist-pytorch/)             | Chiffres MNIST (première fois en PyTorch) | `tp4` |
 | [05-my-own-dataset](05-my-own-dataset/)           | Ton propre dataset (pommes vs poires, transfer learning) | `tp5` |
 | [06-cnn](06-cnn/)                                 | CNN sur MNIST (convolution) + reconnaissance ONNX dans le navigateur | `tp6` |
+| [07-gan](07-gan/)                                 | GAN sur MNIST (générer des chiffres, entraînement adversaire) + génération ONNX dans le navigateur | `tp7` |
 
 ## Conventions mathématiques
 

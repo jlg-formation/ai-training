@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TP 7 - Générer des chiffres (GAN + ONNX)</title>
+  </head>
+  <body>
+    <main>
+      <h1>Génère un chiffre</h1>
+      <p class="sous-titre">
+        Le générateur entraîné au TP 7 tourne directement dans ton navigateur,
+        via ONNX. Chaque clic tire un point <strong>au hasard</strong> dans son
+        espace d'entrée (le vecteur de bruit <em>z</em>) et affiche l'image
+        qu'il produit.
+      </p>
+
+      <div class="zone">
+        <div class="colonne-image">
+          <canvas id="sortie" width="280" height="280"></canvas>
+          <button id="nouvelle" type="button" disabled>Nouvelle image</button>
+        </div>
+
+        <div class="colonne-info">
+          <div id="statut" class="statut">Chargement du modèle…</div>
+          <p class="explication">
+            Le générateur ne « copie » aucune image de MNIST : il a appris à
+            transformer un vecteur de 64 nombres aléatoires en un chiffre
+            plausible. Deux tirages proches donnent deux images proches.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

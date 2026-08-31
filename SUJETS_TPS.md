@@ -8,7 +8,7 @@ Pour quelqu'un qui a jamais fait d'IA et d'entraînement d'IA, je voudrais faire
 
 C'est une excellente idée de progression. Si le but est de **comprendre** l'entraînement d'une IA et pas seulement d'utiliser des modèles existants, je partirais d'un parcours où chaque exercice introduit une seule notion nouvelle. Les étudiants voient ainsi immédiatement l'effet de ce qu'ils changent.
 
-Voici un parcours en 10 étapes.
+Voici un parcours en 11 étapes.
 
 | Étape | Projet                                    | Ce qu'on apprend                     |
 | ----- | ----------------------------------------- | ------------------------------------ |
@@ -18,10 +18,11 @@ Voici un parcours en 10 étapes.
 | 4     | Classification d'images MNIST             | CNN, GPU, epochs                     |
 | 5     | Détection d'objets simple                 | annotations, bounding boxes          |
 | 6     | Classification d'images personnelles      | création de dataset                  |
-| 7     | Fine-tuning d'un petit LLM                | tokenizer, LoRA, VRAM                |
-| 8     | Fine-tuning multimodal                    | texte + image                        |
-| 9     | Entraînement distribué                    | plusieurs GPU                        |
-| 10    | Cloud                                     | Runpod, Vast.ai, Lambda Labs, etc.   |
+| 7     | GAN (générer des images)                  | génératif, entraînement adversaire   |
+| 8     | Fine-tuning d'un petit LLM                | tokenizer, LoRA, VRAM                |
+| 9     | Fine-tuning multimodal                    | texte + image                        |
+| 10    | Entraînement distribué                    | plusieurs GPU                        |
+| 11    | Cloud                                     | Runpod, Vast.ai, Lambda Labs, etc.   |
 
 ## TP 1 — Le neurone unique
 
@@ -195,7 +196,34 @@ On comprend pourquoi les CNN existent.
 
 ---
 
-## TP 7 — Détection d'objets
+## TP 7 — Générer des images (GAN)
+
+Jusqu'ici, tous les réseaux étaient **discriminatifs** : on montre une donnée, ils
+rendent une **étiquette**. On bascule dans le **génératif** : au lieu de
+**reconnaître** un chiffre, on veut en **fabriquer** de nouveaux.
+
+La nouveauté : l'**entraînement adversaire** (Goodfellow 2014). Deux réseaux
+s'affrontent :
+
+```
+Générateur      →  fabrique de fausses images (le faussaire)
+
+Discriminateur  →  vrai ou faux ? (le policier)
+```
+
+On les entraîne **ensemble** : le discriminateur apprend à démasquer les faux, ce
+qui pousse le générateur à faire des faux plus crédibles.
+
+Notions :
+
+- modèle génératif vs discriminatif
+- deux réseaux, deux pertes, deux optimiseurs
+- l'équilibre (les pertes n'atteignent pas zéro)
+- mode collapse
+
+---
+
+## TP 8 — Détection d'objets
 
 Une seule classe.
 
@@ -223,7 +251,7 @@ Comprendre :
 
 ---
 
-## TP 8 — Premier LLM
+## TP 9 — Premier LLM
 
 Petit modèle.
 
@@ -246,7 +274,7 @@ Les étudiants découvrent :
 
 ---
 
-## TP 9 — Entraîner sur son PC
+## TP 10 — Entraîner sur son PC
 
 Comparer plusieurs cartes.
 
@@ -275,7 +303,7 @@ Montrer les outils :
 
 ---
 
-## TP 10 — Passer au cloud
+## TP 11 — Passer au cloud
 
 Même notebook.
 
@@ -317,7 +345,7 @@ Ils comprendront rapidement quels paramètres influencent les performances et le
 Je limiterais volontairement les outils au début :
 
 - **TP 1 à 3** : Python + NumPy (pour comprendre les bases sans magie)
-- **TP 4 à 7** : PyTorch (framework de référence pour l'apprentissage profond)
-- **TP 8 à 10** : Hugging Face (Transformers, Datasets, PEFT/LoRA) + plateformes cloud (Colab, Runpod, Vast.ai)
+- **TP 4 à 8** : PyTorch (framework de référence pour l'apprentissage profond)
+- **TP 9 à 11** : Hugging Face (Transformers, Datasets, PEFT/LoRA) + plateformes cloud (Colab, Runpod, Vast.ai)
 
 Ainsi, les apprenants progressent d'un simple neurone codé à la main jusqu'au fine-tuning d'un LLM moderne, tout en gardant une continuité dans les concepts et les outils.
