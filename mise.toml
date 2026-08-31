@@ -43,3 +43,8 @@ run = "uv run telecharger_dataset_jlg.py"
 description = "TP 5 - Images personnelles (créer son dataset, transfer learning)"
 dir = "05-my-own-dataset"
 run = "uv run main.py"
+
+[tasks.tp6]
+description = "TP 6 - CNN sur MNIST (convolution) + export ONNX"
+dir = "06-cnn"
+run = "uv run main.py"

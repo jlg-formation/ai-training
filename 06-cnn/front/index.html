@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TP 6 - Reconnaissance de chiffres (CNN + ONNX)</title>
+  </head>
+  <body>
+    <main>
+      <h1>Dessine un chiffre</h1>
+      <p class="sous-titre">
+        Trace un chiffre (0 à 9) à la souris. Le CNN entraîné au TP 6 le
+        reconnaît directement dans ton navigateur, via ONNX.
+      </p>
+
+      <div class="zone">
+        <div class="colonne-dessin">
+          <canvas id="dessin" width="280" height="280"></canvas>
+          <button id="effacer" type="button">Effacer</button>
+        </div>
+
+        <div class="colonne-resultat">
+          <div id="prediction" class="prediction">?</div>
+          <div id="statut" class="statut">Chargement du modèle…</div>
+          <div id="barres" class="barres"></div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

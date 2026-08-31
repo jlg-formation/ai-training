@@ -95,6 +95,7 @@ le `.venv` partagé.
 | [03-xor-couche-cachee](03-xor-couche-cachee/)     | XOR et couche cachée (MLP)      | `tp3`      |
 | [04-mnist-pytorch](04-mnist-pytorch/)             | Chiffres MNIST (première fois en PyTorch) | `tp4` |
 | [05-my-own-dataset](05-my-own-dataset/)           | Ton propre dataset (pommes vs poires, transfer learning) | `tp5` |
+| [06-cnn](06-cnn/)                                 | CNN sur MNIST (convolution) + reconnaissance ONNX dans le navigateur | `tp6` |
 
 ## Conventions mathématiques
 
