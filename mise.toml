@@ -48,3 +48,8 @@ run = "uv run main.py"
 description = "TP 6 - CNN sur MNIST (convolution) + export ONNX"
 dir = "06-cnn"
 run = "uv run main.py"
+
+[tasks.tp6-site]
+description = "TP 6 - Site de reconnaissance (dessiner un chiffre à la souris)"
+dir = "06-cnn/front"
+run = ["bun install", "bun run dev"]

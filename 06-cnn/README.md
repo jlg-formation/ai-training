@@ -79,6 +79,12 @@ Le front utilise **Bun**, **Vite** et **TypeScript**, avec `onnxruntime-web`
 pour l'inférence dans le navigateur.
 
 ```
+mise run tp6-site
+```
+
+ou manuellement depuis ce dossier :
+
+```
 cd front
 bun install
 bun run dev
