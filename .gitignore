@@ -3,6 +3,11 @@
 __pycache__/
 *.pyc
 
+# Dépendances Node factorisées à la racine (workspaces Bun des fronts TP)
+node_modules/
+# Sorties de build des fronts (Vite)
+*/front/dist/
+
 # Sorties générées par les TP
 resultat.png
 *.png

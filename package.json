@@ -1,0 +1,5 @@
+{
+  "name": "ai-training-sites",
+  "private": true,
+  "workspaces": ["*/front"]
+}
