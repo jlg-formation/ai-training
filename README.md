@@ -98,6 +98,37 @@ le `.venv` partagé.
 | [06-cnn](06-cnn/)                                 | CNN sur MNIST (convolution) + reconnaissance ONNX dans le navigateur | `tp6` |
 | [07-gan](07-gan/)                                 | GAN sur MNIST (générer des chiffres, entraînement adversaire) + génération ONNX dans le navigateur | `tp7` |
 
+## Sites web des TP (front)
+
+Certains TP (6, 7…) réutilisent le modèle entraîné dans un **petit site web**
+(`NN-slug/front/`) qui charge le modèle **ONNX** et l'exécute dans le navigateur
+(Bun + Vite + TypeScript + `onnxruntime-web`).
+
+Comme pour Python, les dépendances Node sont **factorisées à l'échelle du dépôt**
+via les [workspaces Bun](https://bun.sh/docs/install/workspaces) : le
+[`package.json`](package.json) racine déclare `"workspaces": ["*/front"]`, si
+bien qu'**un seul `node_modules` existe à la racine** (dans `node_modules/.bun/`)
+au lieu d'un par TP. Chaque `front/` garde un dossier `node_modules/` **léger**
+qui ne contient que des **liens symboliques** vers ce magasin partagé (aucune
+copie des fichiers ; non versionné).
+
+Installer une fois, depuis la racine :
+
+```powershell
+bun install
+```
+
+Puis lancer le site d'un TP (installe au besoin, puis démarre Vite) :
+
+```powershell
+mise run tp6-site   # ou tp7-site
+```
+
+> Le glob `*/front` capte **automatiquement** tout futur TP ayant un dossier
+> `front/` : rien à changer à la racine. On garde le **linker isolé** de Bun (par
+> défaut) ; le linker `hoisted` est à éviter sur Windows (il casse la résolution
+> des binaires natifs `esbuild`/`rollup` en workspace).
+
 ## Conventions mathématiques
 
 Les fichiers `MATH.md` des TP dérivent les gradients à la main. Comme il existe

@@ -118,3 +118,32 @@ Quand un `README.md` illustre le réseau avec un diagramme Mermaid :
    ```
 
 3. Ajouter une ligne au tableau « TP disponibles » de [README.md](README.md).
+
+## Ajouter un site web à un TP (front ONNX)
+
+Motif récurrent (TP 6, 7…) : un modèle entraîné en PyTorch est exporté en **ONNX**
+puis réutilisé dans un petit site `NN-slug/front/` (Bun + Vite + TypeScript +
+`onnxruntime-web`).
+
+- Les dépendances Node sont **factorisées à la racine** via les **workspaces
+  Bun** : le [package.json](package.json) racine déclare `"workspaces":
+  ["*/front"]`. Le glob capte **automatiquement** tout nouveau `NN-slug/front` —
+  **ne rien changer à la racine**.
+- Chaque `front/` garde **son propre** `package.json` (avec ses
+  `devDependencies` : `vite`, `typescript`, `vite-plugin-static-copy`) et sa
+  config (`vite.config.ts`, `tsconfig.json`). Cette duplication de config est
+  **assumée** ; ne pas déplacer l'outillage à la racine.
+- **Linker Bun** : garder le **défaut (isolé)**. Ne **pas** forcer
+  `linker = "hoisted"` (bunfig) : sur Windows il casse la résolution des binaires
+  natifs `esbuild`/`rollup` en workspace (`could not find bin metadata file`),
+  non réparé par `bun install --force`. En mode isolé, les paquets sont stockés
+  une seule fois dans `node_modules/.bun/` et chaque `front/node_modules/<pkg>`
+  est un lien symbolique.
+- **Copie des `.wasm` d'ONNX** dans `vite.config.ts` : résoudre le dossier `dist`
+  via Node, pas par un chemin relatif fixe (le paquet n'est plus dans
+  `front/node_modules`). `onnxruntime-web` n'expose **pas** `./package.json` dans
+  ses `exports` ; passer par un sous-chemin `.wasm` exporté :
+  `path.dirname(require.resolve("onnxruntime-web/ort-wasm-simd-threaded.wasm"))`.
+- Ajouter une tâche `tpN-site` dans [mise.toml](mise.toml) (`dir = "NN-slug/front"`,
+  `run = ["bun install", "bun run dev"]`) et documenter le site dans le
+  `README.md` du TP.
