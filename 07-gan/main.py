@@ -80,8 +80,10 @@ transformation = Compose(
     ]
 )
 
+# root="../data" : le dossier data/ PARTAGE a la racine (voir TP 4). MNIST n'est
+# donc telecharge qu'une seule fois pour les TP 4, 6 et 7.
 jeu_train = datasets.MNIST(
-    root="./data", train=True, download=True, transform=transformation
+    root="../data", train=True, download=True, transform=transformation
 )
 
 # drop_last=True : on jette le dernier mini-batch incomplet pour que tous les

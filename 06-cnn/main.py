@@ -74,11 +74,13 @@ transformation = Compose(
     ]
 )
 
+# root="../data" : le dossier data/ PARTAGÉ à la racine (voir TP 4). MNIST n'est
+# donc téléchargé qu'une seule fois pour les TP 4, 6 et 7.
 jeu_train = datasets.MNIST(
-    root="./data", train=True, download=True, transform=transformation
+    root="../data", train=True, download=True, transform=transformation
 )
 jeu_test = datasets.MNIST(
-    root="./data", train=False, download=True, transform=transformation
+    root="../data", train=False, download=True, transform=transformation
 )
 
 loader_train = DataLoader(jeu_train, batch_size=BATCH_SIZE, shuffle=True)

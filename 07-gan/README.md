@@ -86,8 +86,9 @@ mise run tp7
 
 ou depuis ce dossier : `uv run main.py`.
 
-Le script télécharge MNIST dans `data/` (déjà présent si tu as fait le TP 4 ou
-6), entraîne le GAN (GPU si disponible, sinon CPU), puis enregistre dans
+Le script télécharge MNIST dans le `data/` **partagé à la racine** (déjà présent
+si tu as fait le TP 4 ou 6), entraîne le GAN (GPU si disponible, sinon CPU), puis
+enregistre dans
 **`resultat.png`** :
 
 - une **mosaïque 8×8 de chiffres générés** à partir d'un bruit fixe ;

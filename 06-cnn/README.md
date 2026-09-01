@@ -66,7 +66,8 @@ mise run tp6
 
 ou depuis ce dossier : `uv run main.py`.
 
-Le script télécharge MNIST dans `data/`, entraîne le CNN (GPU si disponible,
+Le script télécharge MNIST dans le `data/` **partagé à la racine** (déjà présent
+si tu as fait le TP 4 ou 7), entraîne le CNN (GPU si disponible,
 sinon CPU), affiche la précision, puis :
 
 - enregistre les courbes et la matrice de confusion dans **`resultat.png`** ;

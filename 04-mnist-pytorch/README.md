@@ -92,9 +92,11 @@ consacré à la comparaison CPU / GPU / consommation.
 ## Les données MNIST
 
 `torchvision` **télécharge** MNIST la **première fois** (~11 Mo) dans le dossier
-`data/` (ignoré par git), puis le relit depuis le disque. Le split
-**train (60 000) / test (10 000)** est **officiel** : plus besoin de le découper
-soi-même comme aux TP 2 et 3.
+`data/` **partagé à la racine du projet** (ignoré par git), puis le relit depuis
+le disque. Ce même dossier sert aux TP 6 et 7 : MNIST n'est donc téléchargé
+**qu'une seule fois** pour les trois TP. Le split **train (60 000) / test
+(10 000)** est **officiel** : plus besoin de le découper soi-même comme aux
+TP 2 et 3.
 
 ## Lancer le TP (avec uv)
 

@@ -42,10 +42,10 @@ torch.manual_seed(0)
 # ======================================================================
 # CONSTANTES PÉDAGOGIQUES : les leviers à faire varier (voir README.md)
 # ======================================================================
-H = 128               # neurones de la couche cachée (comme le H du TP 3)
-LEARNING_RATE = 0.1   # pas de la descente de gradient
-EPOCHS = 5            # nombre de passages complets sur les données d'entraînement
-BATCH_SIZE = 64       # nombre d'images par mini-batch
+H = 128  # neurones de la couche cachée (comme le H du TP 3)
+LEARNING_RATE = 0.1  # pas de la descente de gradient
+EPOCHS = 5  # nombre de passages complets sur les données d'entraînement
+BATCH_SIZE = 64  # nombre d'images par mini-batch
 
 
 # ----------------------------------------------------------------------
@@ -61,14 +61,20 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # ----------------------------------------------------------------------
 # 1) Les données : MNIST via un Dataset + un DataLoader
 # ----------------------------------------------------------------------
-# torchvision télécharge MNIST la PREMIÈRE fois (~11 Mo) dans ./data, puis le
-# relit depuis le disque. ToTensor convertit l'image en tenseur de forme
-# (1, 28, 28) avec des pixels ramenés dans [0, 1].
+# torchvision télécharge MNIST la PREMIÈRE fois (~11 Mo) dans ../data (le dossier
+# data/ PARTAGÉ à la racine du projet), puis le relit depuis le disque. Comme les
+# TP 6 et 7 pointent vers le même ../data, le téléchargement n'a lieu qu'une fois
+# pour les trois TP (download=True = « télécharge SI absent »). ToTensor convertit
+# l'image en tenseur de forme (1, 28, 28) avec des pixels ramenés dans [0, 1].
 #   - train=True  : les 60 000 images d'entraînement
 #   - train=False : les 10 000 images de test (le split officiel, comme le
 #                   train/test qu'on découpait nous-mêmes aux TP 2 et 3)
-jeu_train = datasets.MNIST(root="./data", train=True, download=True, transform=ToTensor())
-jeu_test = datasets.MNIST(root="./data", train=False, download=True, transform=ToTensor())
+jeu_train = datasets.MNIST(
+    root="../data", train=True, download=True, transform=ToTensor()
+)
+jeu_test = datasets.MNIST(
+    root="../data", train=False, download=True, transform=ToTensor()
+)
 
 # Le DataLoader découpe le jeu en MINI-BATCHS et (pour l'entraînement) mélange
 # les images à chaque epoch. Nouveauté du TP : on n'entraîne plus sur tout le
@@ -86,13 +92,13 @@ loader_test = DataLoader(jeu_test, batch_size=BATCH_SIZE)
 class ReseauMLP(nn.Module):
     def __init__(self):
         super().__init__()
-        self.couche_cachee = nn.Linear(28 * 28, H)   # W1 (784 x H) + b1
-        self.sortie = nn.Linear(H, 10)               # W2 (H x 10) + b2
+        self.couche_cachee = nn.Linear(28 * 28, H)  # W1 (784 x H) + b1
+        self.sortie = nn.Linear(H, 10)  # W2 (H x 10) + b2
 
     def forward(self, x):
-        x = x.view(x.size(0), -1)          # aplatit (N, 1, 28, 28) -> (N, 784)
+        x = x.view(x.size(0), -1)  # aplatit (N, 1, 28, 28) -> (N, 784)
         x = torch.relu(self.couche_cachee(x))
-        return self.sortie(x)              # LOGITS bruts : PAS de softmax ici !
+        return self.sortie(x)  # LOGITS bruts : PAS de softmax ici !
 
 
 modele = ReseauMLP().to(device)
@@ -117,17 +123,17 @@ optimiseur = torch.optim.SGD(modele.parameters(), lr=LEARNING_RATE)
 # ----------------------------------------------------------------------
 def entrainer_une_epoch():
     """Un passage complet sur le jeu d'entraînement, batch par batch."""
-    modele.train()                         # mode entraînement
+    modele.train()  # mode entraînement
     perte_totale = 0.0
     for images, cibles in loader_train:
         images, cibles = images.to(device), cibles.to(device)
 
         # Les 4 gestes clés de PyTorch, à la place de notre code NumPy :
-        optimiseur.zero_grad()             # a) remet les gradients à zéro
-        logits = modele(images)            # b) passe avant (appelle forward)
-        p = perte(logits, cibles)          # c) calcule la perte
-        p.backward()                       # d) AUTOGRAD : tous les gradients
-        optimiseur.step()                  #    met à jour les poids
+        optimiseur.zero_grad()  # a) remet les gradients à zéro
+        logits = modele(images)  # b) passe avant (appelle forward)
+        p = perte(logits, cibles)  # c) calcule la perte
+        p.backward()  # d) AUTOGRAD : tous les gradients
+        optimiseur.step()  #    met à jour les poids
 
         perte_totale += p.item()
     return perte_totale / len(loader_train)
@@ -135,16 +141,16 @@ def entrainer_une_epoch():
 
 def evaluer(loader):
     """Renvoie (perte moyenne, accuracy) sur un loader, sans apprendre."""
-    modele.eval()                          # mode évaluation
+    modele.eval()  # mode évaluation
     perte_totale = 0.0
     bonnes = 0
     total = 0
-    with torch.no_grad():                  # pas de gradient : plus rapide
+    with torch.no_grad():  # pas de gradient : plus rapide
         for images, cibles in loader:
             images, cibles = images.to(device), cibles.to(device)
             logits = modele(images)
             perte_totale += perte(logits, cibles).item()
-            predictions = logits.argmax(dim=1)   # classe au plus gros logit
+            predictions = logits.argmax(dim=1)  # classe au plus gros logit
             bonnes += (predictions == cibles).sum().item()
             total += cibles.size(0)
     return perte_totale / len(loader), bonnes / total
@@ -157,8 +163,10 @@ def main():
     print(f"Device utilisé : {device}")
     n_parametres = sum(p.numel() for p in modele.parameters())
     print(f"Neurones cachés H = {H} | paramètres du modèle : {n_parametres:,}")
-    print(f"Images train : {len(jeu_train)} | test : {len(jeu_test)} "
-          f"| batch = {BATCH_SIZE}\n")
+    print(
+        f"Images train : {len(jeu_train)} | test : {len(jeu_test)} "
+        f"| batch = {BATCH_SIZE}\n"
+    )
 
     historique_train = []
     historique_test = []
@@ -207,7 +215,9 @@ def main():
 
     # --- (b) Courbe de loss train vs test ---
     ax_loss = fig.add_subplot(2, 2, 3)
-    ax_loss.plot(range(1, EPOCHS + 1), historique_train, label="loss entraînement", color="blue")
+    ax_loss.plot(
+        range(1, EPOCHS + 1), historique_train, label="loss entraînement", color="blue"
+    )
     ax_loss.plot(range(1, EPOCHS + 1), historique_test, label="loss test", color="red")
     ax_loss.set_title("TP 4 - MNIST : loss au fil des epochs")
     ax_loss.set_xlabel("epoch")
